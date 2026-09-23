@@ -76,6 +76,8 @@ def check_row_count_anomaly(cur):
         """
     )
     today_count, trailing_avg = cur.fetchone()
+    if trailing_avg is not None:
+        trailing_avg = float(trailing_avg)
 
     if trailing_avg is None or today_count is None:
         log.info("Not enough history yet for row-count anomaly check -- skipping.")
