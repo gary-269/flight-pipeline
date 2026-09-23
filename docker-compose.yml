@@ -41,6 +41,8 @@ services:
       timeout: 5s
       retries: 10
 
+    
+
   airflow-db:
     image: postgres:16
     environment:
@@ -76,8 +78,15 @@ services:
     command: bash -c "pip install --no-cache-dir requests psycopg2-binary pandas && airflow scheduler"
     depends_on:
       - airflow-init
+  metabase:
+      image: metabase/metabase:latest
+      ports:
+        - "3000:3000"
+      depends_on:
+        - postgres
 
 volumes:
   pg_data:
   airflow_db_data:
   airflow_logs:
+

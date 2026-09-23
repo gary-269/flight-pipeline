@@ -52,13 +52,43 @@ python scripts/quality_checks.py
 python scripts/build_gold.py
 
 
-## Connecting Power BI
+## Connecting a BI tool (Metabase)
 
-Use Power BI's Postgres connector:
-- Server: `localhost:5433` (or whatever `WAREHOUSE_PORT` is set to)
+Power BI Desktop has no native macOS version, so this project uses
+[Metabase](https://www.metabase.com/) instead — a free, open-source BI
+tool that runs as just another Docker container, requiring no
+platform-specific drivers.
+
+Metabase is defined as a service in `docker-compose.yml` and starts
+alongside the rest of the stack:
+
+docker compose up -d metabase
+
+Then open http://localhost:3000, complete the first-run setup, and
+add a database with:
+- Host: `postgres` (the container's internal Docker network name —
+  not `localhost`, since Metabase runs inside the same Docker network
+  as Postgres)
+- Port: `5432` (Postgres's internal port, not the `5433` external
+  port used when connecting from outside Docker)
 - Database: `flights`
-- Point tables at the `gold` schema only — that's the layer meant for
-  consumption.
+- Schemas: `gold` only — the layer meant for consumption
+- Username / Password: as set in `.env`
+
+### Dashboard
+
+Three questions were built directly on the Gold tables (no
+aggregation needed in Metabase — Gold is already pre-aggregated):
+- **Daily Kpis** — aircraft count and traffic volume per day
+- **Top Aircraft** — top 10 most-frequently-tracked aircraft, sorted
+  and limited in the query builder
+- **Hourly Trends** — average aircraft count by hour of day
+
+These are combined into a single dashboard, "OpenSky GTA Flight
+Overview." The Daily Kpis and Hourly Trends charts show a single bar
+initially and become genuinely useful trend lines after the pipeline
+has run across multiple days/hours.
+
 
 ## Tech decisions
 
