@@ -89,6 +89,8 @@ Overview." The Daily Kpis and Hourly Trends charts show a single bar
 initially and become genuinely useful trend lines after the pipeline
 has run across multiple days/hours.
 
+![Dashboard screenshot](docs/dashboard.png)
+
 
 ## Tech decisions
 
